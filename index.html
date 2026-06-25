@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Burgundy, France A Timeless Allure</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* 全局重置 & 老钱风基调 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f6f3ef;
+      color: #2e2b28;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ---- 浮动花瓣 (Canvas) - 樱花淡粉色 ---- */
+    #petal-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ---- 光斑特效 (柔和) ---- */
+    .light-spot {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 245, 200, 0.3), rgba(255, 225, 150, 0.05) 70%);
+      filter: blur(16px);
+      z-index: 0;
+      animation: floatGlow 20s infinite alternate ease-in-out;
+    }
+
+    .light-spot:nth-child(1) {
+      width: 400px;
+      height: 400px;
+      top: -80px;
+      left: -80px;
+      animation-duration: 22s;
+    }
+
+    .light-spot:nth-child(2) {
+      width: 550px;
+      height: 550px;
+      bottom: 5%;
+      right: -150px;
+      animation-duration: 26s;
+      animation-delay: -5s;
+    }
+
+    .light-spot:nth-child(3) {
+      width: 320px;
+      height: 320px;
+      top: 45%;
+      left: 50%;
+      transform: translateX(-50%);
+      animation-duration: 19s;
+      animation-delay: -9s;
+    }
+
+    @keyframes floatGlow {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+      33% { transform: translate(40px, -25px) scale(1.06); opacity: 0.6; }
+      66% { transform: translate(-25px, 35px) scale(0.94); opacity: 0.4; }
+      100% { transform: translate(20px, -15px) scale(1.03); opacity: 0.5; }
+    }
+
+    /* ---- 所有内容置于上层 ---- */
+    .content {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ---- 导航 (简约大气) ---- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.8rem 0 1.2rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(200, 190, 180, 0.4);
+      margin-bottom: 2.2rem;
+      position: sticky;
+      top: 0;
+      background: rgba(246, 243, 239, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .navbar.scrolled {
+      background: rgba(246, 243, 239, 0.96);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.03);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #3d3530;
+      letter-spacing: 0.5px;
+      cursor: default;
+      transition: opacity 0.3s;
+    }
+
+    .logo:hover {
+      opacity: 0.7;
+    }
+
+    .logo span {
+      font-weight: 300;
+      color: #7a6a5c;
+      font-size: 1.2rem;
+      margin-left: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.8rem;
+      font-weight: 400;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #4d423b;
+      transition: color 0.3s, opacity 0.3s;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 4px;
+    }
+
+    .nav-links a:hover {
+      color: #8a6e5a;
+      border-bottom-color: #b8a392;
+    }
+
+    /* ---- 英雄区 (简约大气) ---- */
+    .hero {
+      position: relative;
+      border-radius: 28px;
+      margin: 0.5rem 0 0.8rem;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(60, 45, 35, 0.04);
+      border: 1px solid rgba(200, 190, 180, 0.25);
+      min-height: 420px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #2e2b28;
+    }
+
+    .hero-image-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: brightness(0.7) saturate(1.05);
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .hero:hover .hero-image-bg {
+      transform: scale(1.03);
+    }
+
+    .hero-overlay {
+      position: relative;
+      z-index: 1;
+      padding: 4rem 3rem;
+      text-align: center;
+      max-width: 780px;
+      color: #ffffff;
+      text-shadow: 0 2px 20px rgba(20, 15, 10, 0.4);
+    }
+
+    .hero-overlay h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.2rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+      margin-bottom: 0.6rem;
+      color: #ffffff;
+    }
+
+    .hero-overlay h1 .sub {
+      font-size: 2rem;
+      font-weight: 400;
+      display: block;
+      margin-top: 0.2rem;
+      letter-spacing: 2px;
+      opacity: 0.9;
+      color: #ffffff;
+    }
+
+    .hero-overlay p {
+      font-size: 1.15rem;
+      font-weight: 300;
+      max-width: 600px;
+      margin: 0.8rem auto 0;
+      border-top: 1px solid rgba(255, 245, 235, 0.2);
+      padding-top: 0.8rem;
+      letter-spacing: 0.3px;
+      color: #ffffff;
+    }
+
+    /* ---- 作者信息区 (主标题下方) ---- */
+    .author-info {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 0.8rem 2.2rem;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0 0.2rem;
+      background: rgba(246, 243, 239, 0.6);
+      backdrop-filter: blur(4px);
+      border-radius: 60px;
+      border: 1px solid rgba(200, 190, 180, 0.2);
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      letter-spacing: 0.5px;
+      color: #4d423b;
+      font-size: 1rem;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    .author-info:hover {
+      background: rgba(246, 243, 239, 0.85);
+      box-shadow: 0 4px 20px rgba(60, 45, 35, 0.04);
+    }
+
+    .author-info .divider {
+      color: #b8a392;
+      font-weight: 200;
+      font-size: 1.2rem;
+      user-select: none;
+    }
+
+    .author-info .name {
+      font-weight: 500;
+      color: #3d3530;
+    }
+
+    .author-info .id {
+      font-weight: 400;
+      color: #5f4f42;
+    }
+
+    .author-info .group {
+      font-weight: 400;
+      color: #5f4f42;
+      background: rgba(200, 190, 180, 0.15);
+      padding: 0.1rem 1rem;
+      border-radius: 30px;
+      border: 1px solid rgba(200, 190, 180, 0.1);
+    }
+
+    /* ---- 标题体系 (简约) ---- */
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      color: #3d3530;
+      margin: 3.2rem 0 1.4rem;
+      padding-left: 1.6rem;
+      border-left: 4px solid #c9b7a8;
+      letter-spacing: 0.3px;
+    }
+
+    h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: #4f423a;
+      margin: 1.8rem 0 0.8rem;
+      font-weight: 500;
+    }
+
+    p {
+      margin-bottom: 1.2rem;
+      font-weight: 300;
+      color: #3d3732;
+    }
+
+    .citation {
+      background: #e7dfd8;
+      padding: 0.1rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.85rem;
+      color: #4d4038;
+      white-space: nowrap;
+      font-weight: 400;
+      border: 1px solid #d5c9be;
+      transition: background 0.2s;
+      display: inline-block;
+    }
+
+    .citation:hover {
+      background: #d5c9be;
+    }
+
+    /* ---- 横向滚动图片栏 (删除了重复的1277181) ---- */
+    .scroll-gallery {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+      padding: 1rem 0;
+      margin: 1.2rem 0 2.2rem;
+      background: #f0e8e0;
+      border-radius: 16px;
+      border: 1px solid rgba(200, 190, 180, 0.2);
+    }
+
+    .scroll-track {
+      display: flex;
+      gap: 1.6rem;
+      animation: scrollHorizontal 32s linear infinite;
+      width: max-content;
+    }
+
+    .scroll-track img {
+      height: 160px;
+      width: auto;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+      border: 1px solid rgba(200, 190, 180, 0.15);
+      transition: transform 0.4s, box-shadow 0.4s;
+      cursor: pointer;
+    }
+
+    .scroll-track img:hover {
+      transform: scale(1.04) translateY(-4px);
+      box-shadow: 0 8px 28px rgba(40, 30, 25, 0.06);
+    }
+
+    @keyframes scrollHorizontal {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .scroll-gallery:hover .scroll-track {
+      animation-play-state: paused;
+    }
+
+    /* ---- 所有区块淡入淡出 (滚动触发) ---- */
+    .fade-section {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: opacity, transform;
+    }
+
+    .fade-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ---- 图文混排 (淡入动画 + 悬停放大) ---- */
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem 3rem;
+      margin: 2.2rem 0 2.8rem;
+      align-items: center;
+    }
+
+    .row .text {
+      flex: 1 1 300px;
+    }
+
+    .row .image {
+      flex: 1 1 300px;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.02);
+      border: 1px solid rgba(200, 190, 180, 0.2);
+      transition: box-shadow 0.4s, transform 0.4s ease;
+      cursor: pointer;
+    }
+
+    .row .image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .row .image:hover {
+      box-shadow: 0 12px 40px rgba(60, 45, 35, 0.06);
+      transform: translateY(-4px);
+    }
+
+    .row .image:hover img {
+      transform: scale(1.03);
+    }
+
+    .row-reverse {
+      flex-direction: row-reverse;
+    }
+
+    /* ---- 图片网格 (悬停放大) ---- */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      margin: 1.8rem 0 1.2rem;
+    }
+
+    .grid-2col .grid-item {
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(40,30,25,0.02);
+      background: #f8f4f0;
+      border: 1px solid rgba(200, 190, 180, 0.2);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      cursor: pointer;
+    }
+
+    .grid-2col .grid-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(50, 35, 25, 0.06);
+      border-color: rgba(180, 165, 150, 0.3);
+    }
+
+    .grid-2col .grid-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .grid-2col .grid-item:hover img {
+      transform: scale(1.04);
+    }
+
+    .grid-2col .grid-item .caption {
+      padding: 0.8rem 0.9rem 0.9rem;
+      font-size: 0.9rem;
+      color: #4f423a;
+      font-style: italic;
+      background: #f8f4f0;
+      text-align: center;
+      border-top: 1px solid rgba(200, 190, 180, 0.15);
+      font-weight: 350;
+      transition: background 0.3s;
+    }
+
+    .grid-2col .grid-item:hover .caption {
+      background: #f0e8e0;
+    }
+
+    /* ---- 三张并排图片 (Conclusion后) ---- */
+    .gallery-three {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.8rem;
+      margin: 2rem 0 1.2rem;
+    }
+
+    .gallery-three .gallery-item {
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(40,30,25,0.02);
+      border: 1px solid rgba(200, 190, 180, 0.2);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      cursor: pointer;
+    }
+
+    .gallery-three .gallery-item:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(50, 35, 25, 0.06);
+      border-color: rgba(180, 165, 150, 0.3);
+    }
+
+    .gallery-three .gallery-item img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-three .gallery-item:hover img {
+      transform: scale(1.04);
+    }
+
+    .gallery-three .gallery-item .caption {
+      padding: 0.8rem 0.9rem 0.9rem;
+      font-size: 0.9rem;
+      color: #4f423a;
+      font-style: italic;
+      background: #f8f4f0;
+      text-align: center;
+      border-top: 1px solid rgba(200, 190, 180, 0.15);
+      font-weight: 350;
+      transition: background 0.3s;
+    }
+
+    .gallery-three .gallery-item:hover .caption {
+      background: #f0e8e0;
+    }
+
+    /* ---- 表格 (简约大气) ---- */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 2.2rem 0 0.4rem;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.01);
+      border: 1px solid rgba(200, 190, 180, 0.2);
+      transition: box-shadow 0.3s;
+    }
+
+    .table-wrap:hover {
+      box-shadow: 0 6px 28px rgba(0,0,0,0.02);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #faf7f4;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: #e5dbd2;
+      color: #3d3530;
+      font-weight: 500;
+      padding: 0.9rem 1.4rem;
+      text-align: left;
+      font-family: 'Playfair Display', serif;
+      letter-spacing: 0.3px;
+    }
+
+    td {
+      padding: 0.8rem 1.4rem;
+      border-bottom: 1px solid rgba(200, 190, 180, 0.15);
+      transition: background 0.25s;
+    }
+
+    tr:hover td {
+      background: #f0e8e0;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .table-caption {
+      font-size: 0.9rem;
+      color: #5f4f42;
+      margin-top: 0.6rem;
+      font-style: italic;
+      text-align: center;
+    }
+
+    /* ---- 视频板块 (简约 + 醒目引导) ---- */
+    .video-box {
+      background: #ece5de;
+      border-radius: 24px;
+      padding: 2.4rem 2.2rem;
+      margin: 2.8rem 0 2.2rem;
+      text-align: center;
+      border: 1px solid rgba(200, 190, 180, 0.2);
+      transition: box-shadow 0.4s, transform 0.3s;
+    }
+
+    .video-box:hover {
+      box-shadow: 0 8px 36px rgba(60, 45, 35, 0.04);
+      transform: translateY(-2px);
+    }
+
+    .video-box .video-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 500;
+      color: #3d3530;
+      font-size: 1.3rem;
+      margin-bottom: 1.4rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* 视频引导区：箭头 + 提示语 */
+    .video-cta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1.6rem;
+      animation: bounceDown 2s infinite ease-in-out;
+    }
+
+    .video-cta .arrow {
+      font-size: 2.4rem;
+      line-height: 1;
+      color: #5f4f42;
+      opacity: 0.7;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+
+    .video-cta .hint {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #5f4f42;
+      background: rgba(255, 245, 235, 0.4);
+      padding: 0.2rem 1.2rem;
+      border-radius: 30px;
+      backdrop-filter: blur(4px);
+      margin-top: 0.2rem;
+      border: 1px solid rgba(200, 190, 180, 0.2);
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .video-box:hover .video-cta .arrow {
+      opacity: 1;
+      transform: translateY(4px);
+    }
+
+    .video-box:hover .video-cta .hint {
+      background: rgba(255, 245, 235, 0.7);
+      color: #3d3530;
+    }
+
+    @keyframes bounceDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    .video-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem 1.6rem;
+    }
+
+    .video-links a {
+      display: inline-block;
+      background: #5f4f42;
+      color: #f6f0ea;
+      padding: 0.7rem 2.4rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+      border: 1px solid rgba(255, 245, 235, 0.1);
+      letter-spacing: 0.3px;
+    }
+
+    .video-links a:hover {
+      background: #3f342c;
+      transform: scale(1.02) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(40, 30, 25, 0.08);
+    }
+
+    .video-links a.secondary {
+      background: #7f6d5e;
+    }
+
+    .video-links a.secondary:hover {
+      background: #5f4f42;
+    }
+
+    .video-note {
+      margin-top: 1.2rem;
+      font-size: 0.9rem;
+      color: #5f4f42;
+    }
+
+    /* ---- 参考文献 (简约) ---- */
+    .references {
+      margin-top: 3.8rem;
+      padding-top: 2.2rem;
+      border-top: 1px solid rgba(200, 190, 180, 0.3);
+    }
+
+    .references h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: #3d3530;
+      border-left: none;
+      padding-left: 0;
+      margin-top: 0;
+    }
+
+    .references p {
+      font-size: 0.88rem;
+      margin-bottom: 0.5rem;
+      padding-left: 2rem;
+      text-indent: -2rem;
+      font-weight: 300;
+      color: #3d3732;
+      transition: color 0.2s, padding-left 0.2s;
+    }
+
+    .references p:hover {
+      color: #2e2b28;
+      padding-left: 2.2rem;
+    }
+
+    /* ---- 页脚 ---- */
+    .footer {
+      margin-top: 4.5rem;
+      padding: 1.8rem 0 0.8rem;
+      border-top: 1px solid rgba(200, 190, 180, 0.3);
+    }
+
+    .footer .footer-text {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #6f5e4e;
+      letter-spacing: 0.4px;
+      font-weight: 300;
+      margin-bottom: 0;
+    }
+
+    /* ---- 音乐控制按钮 (简约) ---- */
+    .music-toggle {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 10000;
+      background: rgba(60, 45, 35, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 245, 235, 0.1);
+      border-radius: 40px;
+      padding: 10px 20px;
+      color: #f6f0ea;
+      font-size: 0.85rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+      letter-spacing: 0.3px;
+    }
+
+    .music-toggle:hover {
+      background: rgba(40, 30, 25, 0.85);
+      transform: scale(1.03);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    }
+
+    .music-toggle .icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    /* ---- 响应式 ---- */
+    @media (max-width: 700px) {
+      .container { padding: 0 1.2rem; }
+      .hero-overlay { padding: 2.5rem 1.5rem; }
+      .hero-overlay h1 { font-size: 2.8rem; }
+      .hero-overlay h1 .sub { font-size: 1.4rem; }
+      .navbar {
+        flex-direction: column;
+        gap: 0.8rem;
+        align-items: flex-start;
+        position: relative;
+        backdrop-filter: none;
+        background: rgba(246, 243, 239, 0.98);
+      }
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 1rem 1.6rem;
+      }
+      h2 { font-size: 1.8rem; padding-left: 0.8rem; }
+      .light-spot { display: none; }
+      #petal-canvas { display: none; }
+      .scroll-track img { height: 100px; }
+      .music-toggle {
+        bottom: 16px;
+        right: 16px;
+        padding: 8px 14px;
+        font-size: 0.75rem;
+      }
+      .gallery-three {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      .gallery-three .gallery-item img {
+        height: 180px;
+      }
+      .video-cta .arrow {
+        font-size: 1.8rem;
+      }
+      .video-cta .hint {
+        font-size: 0.8rem;
+        padding: 0.1rem 1rem;
+      }
+      .author-info {
+        font-size: 0.85rem;
+        gap: 0.4rem 1.2rem;
+        padding: 0.8rem 1.2rem;
+        border-radius: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .author-info .divider {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 背景音乐 (优雅舒缓钢琴曲) -->
+  <audio id="bg-music" loop style="display:none;">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    <!-- 注：示例为柔和钢琴曲，与勃艮第的优雅氛围契合。您可替换为任何喜欢的钢琴或轻音乐链接 -->
+  </audio>
+
+  <!-- 音乐控制按钮 -->
+  <button class="music-toggle" id="musicToggle" aria-label="切换背景音乐">
+    <span class="icon">♪</span>
+    <span id="musicStatus">播放中</span>
+  </button>
+
+  <!-- 光斑装饰层 -->
+  <div class="light-spot"></div>
+  <div class="light-spot"></div>
+  <div class="light-spot"></div>
+
+  <!-- 浮动樱花花瓣 Canvas -->
+  <canvas id="petal-canvas"></canvas>
+
+  <div class="container content">
+
+    <!-- 导航 -->
+    <nav class="navbar" id="navbar">
+      <div class="logo">Bourgogne <span>· 勃艮第</span></div>
+      <div class="nav-links">
+        <a href="#wine">Vins</a>
+        <a href="#culture">Culture</a>
+        <a href="#tourism">Tourisme</a>
+        <a href="#video">Vidéo</a>
+      </div>
+    </nav>
+
+    <!-- 英雄区 (总标题，文字已改为白色) -->
+    <header class="hero fade-section visible">
+      <img class="hero-image-bg" src="https://images.pexels.com/photos/16547185/pexels-photo-16547185.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="Vignoble et dégustation" />
+      <div class="hero-overlay">
+        <h1>Burgundy, France <span class="sub">A Timeless Allure</span></h1>
+        <p>Where rolling vineyards, medieval towns, and UNESCO heritage converge into an unforgettable sensory journey.</p>
+      </div>
+    </header>
+
+    <!-- 作者信息区 (主标题下方，滚动图片上方) -->
+    <div class="author-info fade-section">
+      <span class="name">Yuxin Tian</span>
+      <span class="divider">·</span>
+      <span class="id">2300880145</span>
+      <span class="divider">·</span>
+      <span class="group">Group A - Group 2</span>
+    </div>
+
+    <!-- 横向滚动图片栏 (删除了重复的1277181) -->
+    <div class="scroll-gallery fade-section">
+      <div class="scroll-track">
+        <!-- 第一组图片 (共9张，删除了重复的1277181) -->
+        <img src="https://images.pexels.com/photos/30763567/pexels-photo-30763567.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 1" />
+        <img src="https://images.pexels.com/photos/37640879/pexels-photo-37640879.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 2" />
+        <img src="https://images.pexels.com/photos/13622704/pexels-photo-13622704.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 3" />
+        <img src="https://images.pexels.com/photos/1277181/pexels-photo-1277181.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 4" />  <!-- 仅保留一张 -->
+        <img src="https://images.pexels.com/photos/15883768/pexels-photo-15883768.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 5" />
+        <img src="https://images.pexels.com/photos/5555878/pexels-photo-5555878.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 6" />
+        <img src="https://images.pexels.com/photos/16547187/pexels-photo-16547187.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 7" />
+        <img src="https://images.pexels.com/photos/6902851/pexels-photo-6902851.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 8" />
+        <img src="https://images.pexels.com/photos/2464421/pexels-photo-2464421.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 9" />
+        <!-- 第二组 (复制，实现无缝，同样删除了重复的1277181) -->
+        <img src="https://images.pexels.com/photos/30763567/pexels-photo-30763567.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 1" />
+        <img src="https://images.pexels.com/photos/37640879/pexels-photo-37640879.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 2" />
+        <img src="https://images.pexels.com/photos/13622704/pexels-photo-13622704.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 3" />
+        <img src="https://images.pexels.com/photos/1277181/pexels-photo-1277181.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 4" />  <!-- 仅保留一张 -->
+        <img src="https://images.pexels.com/photos/15883768/pexels-photo-15883768.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 5" />
+        <img src="https://images.pexels.com/photos/5555878/pexels-photo-5555878.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 6" />
+        <img src="https://images.pexels.com/photos/16547187/pexels-photo-16547187.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 7" />
+        <img src="https://images.pexels.com/photos/6902851/pexels-photo-6902851.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 8" />
+        <img src="https://images.pexels.com/photos/2464421/pexels-photo-2464421.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Burgundy 9" />
+      </div>
+    </div>
+
+    <!-- 引言 -->
+    <p class="fade-section" style="font-size:1.08rem; margin-top:0.2rem; font-weight:350;">Nestled in the heart of eastern France, Burgundy (Bourgogne) captivates visitors with exquisite wines, rich historical tapestry, and world-renowned gastronomy. As a premier tourist destination, it offers a sensory journey through rolling vineyards, medieval towns, and UNESCO-listed heritage, making it an essential experience for any traveler to France.</p>
+
+    <!-- 葡萄酒部分 -->
+    <h2 id="wine" class="fade-section">The Vinous Heartbeat: Burgundy's Wine Heritage</h2>
+    <div class="row fade-section">
+      <div class="text">
+        <p>The identity of Burgundy is inextricably linked to its wine. The region is home to the famous "Climats" — precisely delimited vineyard parcels on the slopes of the Côte de Nuits and Côte de Beaune. Listed as a UNESCO World Heritage Site in 2015, these 1,247 individual plots, each with unique soil and sun exposure, create a viticultural model unparalleled anywhere else in the world <span class="citation">(France.fr, 2024)</span>. This ancient tradition, dating back over 2,000 years to the Gallo-Roman era, forms the backbone of the region's tourism.</p>
+      </div>
+      <div class="image">
+        <img src="https://images.pexels.com/photos/2954929/pexels-photo-2954929.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Verre de vin" />
+        <div style="font-size:0.85rem; color:#5f4f42; margin-top:0.4rem; font-style:italic; text-align:center; border-top:1px solid rgba(200,190,180,0.2); padding-top:0.4rem;">Figure 1: A glass of Burgundy wine, reflecting the region's rich viticultural heritage.</div>
+      </div>
+    </div>
+
+    <p class="fade-section">Despite economic uncertainties, Burgundy's wine industry remains a powerhouse. For the 2024–2025 campaign, production slightly surpassed 1.2 million hectoliters, equivalent to more than 161 million bottles. While this marks the second smallest harvest in fifteen years, the industry's total revenue in 2024 is estimated at €2.5 billion, with nearly €1.65 billion coming from exports <span class="citation">(Bourgogne-Wines.com, 2025)</span>. From January to July 2025, Burgundy exported more than 57 million bottles, generating €951 million in turnover <span class="citation">(Wine Intelligence, 2025)</span>.</p>
+
+    <!-- 网格图片 2 & 3 -->
+    <div class="grid-2col fade-section">
+      <div class="grid-item">
+        <img src="https://images.pexels.com/photos/2570057/pexels-photo-2570057.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Café parisien" />
+        <div class="caption">Figure 2: A charming street scene, evoking the cultural ambiance of Burgundy's historic towns.</div>
+      </div>
+      <div class="grid-item">
+        <img src="https://images.pexels.com/photos/31954094/pexels-photo-31954094.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Cathédrale de Dijon" />
+        <div class="caption">Figure 3: The majestic Dijon Cathedral, a Gothic landmark in the heart of Burgundy.</div>
+      </div>
+    </div>
+
+    <!-- 表格 -->
+    <div class="table-wrap fade-section">
+      <table>
+        <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Production (2024 Harvest)</td><td>1.21 million hectoliters (161+ million bottles)</td></tr>
+          <tr><td>Total Revenue (2024)</td><td>€2.5 billion</td></tr>
+          <tr><td>Export Revenue (2024)</td><td>€1.65 billion</td></tr>
+          <tr><td>Bottles Exported (Jan–Jul 2025)</td><td>57+ million</td></tr>
+          <tr><td>Export Turnover (Jan–Jul 2025)</td><td>€951 million</td></tr>
+          <tr><td>Top Export Markets</td><td>USA, UK, Canada, Japan, Belgium</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-caption fade-section">Table 1: Burgundy Wine Industry Key Figures (2024–2025). (Data: Bourgogne-Wines.com, 2025; Wine Intelligence, 2025)</div>
+
+    <!-- 文化美食 -->
+    <h2 id="culture" class="fade-section">Beyond the Vine: Culture, History, and Gastronomy</h2>
+    <div class="row row-reverse fade-section">
+      <div class="text">
+        <p>Burgundy's appeal extends far beyond its vineyards. The region boasts over 300 churches, the oldest frescoes in France, and four UNESCO World Heritage Sites, offering a wealth of historical exploration from the medieval old town of Auxerre to the Romanesque basilica of Vézelay.</p>
+        <p>Furthermore, Burgundy is a paradise for food lovers. Dijon, the region's capital, is an internationally renowned culinary mecca with numerous Michelin-starred restaurants. The region is the birthplace of iconic dishes like beef bourguignon and is famous for its world-renowned Dijon mustard. This rich culinary landscape is a major draw for tourists seeking an authentic French experience.</p>
+      </div>
+      <div class="image">
+        <img src="https://images.pexels.com/photos/12967616/pexels-photo-12967616.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Cathédrale d'Auxerre" />
+        <div style="font-size:0.85rem; color:#5f4f42; margin-top:0.4rem; font-style:italic; text-align:center; border-top:1px solid rgba(200,190,180,0.2); padding-top:0.4rem;">Figure 4: The stunning Gothic interior of Auxerre Cathedral, a testament to Burgundy's religious heritage.</div>
+      </div>
+    </div>
+
+    <!-- 网格 5 & 6 -->
+    <div class="grid-2col fade-section" style="margin-top:0.5rem;">
+      <div class="grid-item">
+        <img src="https://images.pexels.com/photos/18345081/pexels-photo-18345081.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Plat gastronomique" />
+        <div class="caption">Figure 5: An exquisite dish, showcasing the refined gastronomy of Burgundy.</div>
+      </div>
+      <div class="grid-item">
+        <img src="https://images.pexels.com/photos/269790/pexels-photo-269790.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Carte ancienne" />
+        <div class="caption">Figure 6: A vintage-style map, representing the geographical and cultural exploration of regions like Burgundy.</div>
+      </div>
+    </div>
+
+    <!-- 旅游趋势 (Figure 7 已替换为新图片) -->
+    <h2 id="tourism" class="fade-section">Tourism Trends and the Road Ahead</h2>
+    <div class="row fade-section">
+      <div class="text">
+        <p>While Burgundy's reputation is global, its tourism sector faces challenges. In 2024, the newly opened Cité des Climats et vins de Bourgogne in Beaune, Chablis, and Mâcon attracted only 86,000 visitors, far below its target of 180,000 <span class="citation">(Vinetur.com, 2025)</span>. However, the broader Burgundy-Franche-Comté region recorded 4.5 million tourists and 8.2 million overnight stays during the summer season <span class="citation">(INSEE, 2024)</span>. The region is actively adapting its strategies to better engage visitors and leverage its unparalleled heritage.</p>
+      </div>
+      <div class="image">
+        <img src="https://images.pexels.com/photos/8697538/pexels-photo-8697538.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Grilled steak with berries" />
+        <div style="font-size:0.85rem; color:#5f4f42; margin-top:0.4rem; font-style:italic; text-align:center; border-top:1px solid rgba(200,190,180,0.2); padding-top:0.4rem;">Figure 7: A perfectly grilled steak with berries, reflecting Burgundy's passion for fine dining.</div>
+      </div>
+    </div>
+
+    <!-- 网格 8 & 9 -->
+    <div class="grid-2col fade-section">
+      <div class="grid-item">
+        <img src="https://images.pexels.com/photos/37515853/pexels-photo-37515853.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Tramway à Besançon" />
+        <div class="caption">Figure 8: A modern tram in Besançon, blending historic charm with contemporary life in Burgundy-Franche-Comté.</div>
+      </div>
+      <div class="grid-item">
+        <img src="https://images.pexels.com/photos/14816347/pexels-photo-14816347.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Vignoble" />
+        <div class="caption">Figure 9: The tranquil beauty of a Burgundy vineyard, inviting exploration and discovery.</div>
+      </div>
+    </div>
+
+    <!-- 视频 (带醒目引导箭头和提示语) -->
+    <h2 id="video" class="fade-section">Video: Experience Burgundy from the Sky</h2>
+    <div class="video-box fade-section">
+      <!-- 新增：醒目引导区 -->
+      <div class="video-cta">
+        <span class="arrow">↓</span>
+        <span class="hint">Click to Watch</span>
+      </div>
+      <div class="video-title">For a breathtaking aerial perspective of this magnificent region, watch:</div>
+      <div class="video-links">
+        <a href="https://b23.tv/sGpixZ4" target="_blank">勃艮第葡萄园俯瞰 – The vineyard of Bourgogne seen from the sky</a>
+        <a href="https://b23.tv/z97esjl" target="_blank" class="secondary">法语| 勃艮第——法国的心脏 (Bourgogne)</a>
+      </div>
+      <div class="video-note">Video 1: An aerial tour of Burgundy's famous vineyards. (Additional video also available above.)</div>
+    </div>
+
+    <!-- 结论 -->
+    <h2 class="fade-section">Conclusion</h2>
+    <p class="fade-section">Burgundy is a region where history, nature, and gastronomy converge to create an unforgettable travel experience. From its world-class wines and UNESCO Climats to its medieval architecture and Michelin-starred cuisine, it remains a timeless destination that continues to enchant and inspire.</p>
+
+    <!-- 三张并排图片 (Conclusion后) - Figure 10 已替换 -->
+    <div class="gallery-three fade-section">
+      <div class="gallery-item">
+        <img src="https://images.pexels.com/photos/13728915/pexels-photo-13728915.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Charcuterie and cheese board" />
+        <div class="caption">Figure 10: A curated board of Burgundian charcuterie, cheeses, and fruits.</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.pexels.com/photos/19503827/pexels-photo-19503827.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Gourmet potato dish" />
+        <div class="caption">Figure 11: A refined potato creation, showcasing Burgundy's culinary artistry.</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.pexels.com/photos/32505232/pexels-photo-32505232.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Escargots and white wine" />
+        <div class="caption">Figure 12: Classic Burgundian escargots paired with a crisp white wine.</div>
+      </div>
+    </div>
+
+    <!-- 参考文献 -->
+    <div class="references fade-section">
+      <h3>References</h3>
+      <p>Bourgogne-Wines.com. (2025). <em>Bourgogne Wines Deliver a Strong Performance in 2024</em>. [online] Available at: https://www.bourgogne-wines.com/ [Accessed 25 Jun. 2026].</p>
+      <p>France.fr. (2024). <em>The 5-minute essential guide to Burgundy climats</em>. [online] Available at: https://www.france.fr/en/article/5-minute-guide-climats-burgundy/ [Accessed 25 Jun. 2026].</p>
+      <p>INSEE. (2024). <em>Fréquentation touristique en baisse cet été en Bourgogne-Franche-Comté</em>. INSEE Flash Bourgogne-Franche-Comté, No. 209.</p>
+      <p>Vinetur.com. (2025). <em>勃艮第葡萄酒中心吸引的游客不到预期的一半，2024 年仅达到 86,000 人次</em>. [online] Available at: https://www.vinetur.com/ [Accessed 25 Jun. 2026].</p>
+      <p>Wine Intelligence. (2025). <em>Burgundy Maintains Market Strength Amid Economic Volatility and Reduced Global Demand</em>. [online] Available at: https://wine-intelligence.com/ [Accessed 25 Jun. 2026].</p>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer fade-section">
+      <div class="footer-text">© 2026 · Une élégance intemporelle · Bourgogne</div>
+    </footer>
+
+  </div>
+
+  <script>
+    (function() {
+      // ---- 浮动樱花花瓣 (Canvas) - 淡粉色系 ----
+      const canvas = document.getElementById('petal-canvas');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let petals = [];
+      const PETAL_COUNT = 55;
+
+      function resizeCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      function drawPetal(ctx, x, y, size, rotation, color, opacity) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.globalAlpha = opacity;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(size * 0.4, -size * 0.5, size * 0.9, -size * 0.2, size * 0.7, size * 0.3);
+        ctx.bezierCurveTo(size * 0.5, size * 0.5, size * 0.2, size * 0.4, 0, 0);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      class Petal {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height - height * 0.2;
+          this.size = 7 + Math.random() * 15;
+          this.speedX = -0.4 + Math.random() * 0.8;
+          this.speedY = 0.3 + Math.random() * 0.8;
+          this.rotation = Math.random() * 2 * Math.PI;
+          this.rotationSpeed = (Math.random() - 0.5) * 0.025;
+          this.opacity = 0.3 + Math.random() * 0.45;
+          const colors = [
+            'rgba(255, 210, 210, 0.75)',
+            'rgba(255, 190, 200, 0.65)',
+            'rgba(250, 200, 210, 0.65)',
+            'rgba(255, 180, 195, 0.55)',
+            'rgba(255, 220, 220, 0.75)',
+            'rgba(248, 195, 205, 0.65)'
+          ];
+          this.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          this.rotation += this.rotationSpeed;
+          if (this.y > height + 30) {
+            this.reset();
+            this.y = -20 - Math.random() * 30;
+          }
+          if (this.x < -50) this.x = width + 30;
+          if (this.x > width + 50) this.x = -30;
+        }
+        draw(ctx) {
+          drawPetal(ctx, this.x, this.y, this.size, this.rotation, this.color, this.opacity);
+        }
+      }
+
+      for (let i = 0; i < PETAL_COUNT; i++) {
+        const p = new Petal();
+        p.x = Math.random() * width;
+        p.y = Math.random() * height;
+        petals.push(p);
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        petals.forEach(p => {
+          p.update();
+          p.draw(ctx);
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      // ---- 导航滚动变色 ----
+      const navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 40) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+
+      // ---- 滚动淡入淡出 (Intersection Observer) ----
+      const fadeElements = document.querySelectorAll('.fade-section');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          } else {
+            // 移出视口时淡出 (可选，为了更好的“淡入淡出”效果)
+            entry.target.classList.remove('visible');
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -20px 0px'
+      });
+
+      fadeElements.forEach(el => {
+        observer.observe(el);
+      });
+
+      // ---- 背景音乐控制 ----
+      const audio = document.getElementById('bg-music');
+      const toggleBtn = document.getElementById('musicToggle');
+      const statusText = document.getElementById('musicStatus');
+
+      audio.play().catch(() => {
+        statusText.textContent = '已暂停';
+        toggleBtn.querySelector('.icon').textContent = '♫';
+      });
+
+      toggleBtn.addEventListener('click', () => {
+        if (audio.paused) {
+          audio.play().then(() => {
+            statusText.textContent = '播放中';
+            toggleBtn.querySelector('.icon').textContent = '♪';
+          }).catch(() => {});
+        } else {
+          audio.pause();
+          statusText.textContent = '已暂停';
+          toggleBtn.querySelector('.icon').textContent = '♫';
+        }
+      });
+
+      audio.addEventListener('play', () => {
+        statusText.textContent = '播放中';
+        toggleBtn.querySelector('.icon').textContent = '♪';
+      });
+      audio.addEventListener('pause', () => {
+        statusText.textContent = '已暂停';
+        toggleBtn.querySelector('.icon').textContent = '♫';
+      });
+    })();
+  </script>
+</body>
+</html>
